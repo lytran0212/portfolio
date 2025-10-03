@@ -5,18 +5,26 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Github, Mail, MessageCircle, ExternalLink, X } from "lucide-react";
 import digidyeImage from "@assets/digidye.png";
 import mediapipeImage from "@assets/mediapipe.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { CodeProjectsDialog } from "./CodeProjectsDialog";
+import digiVideo from "@videos/digidye.mp4";
+import mediapipeVideo from "@videos/mediapipe.mp4";
 
 export default function Contact() {
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
+  const [showCodeDialog, setShowCodeDialog] = useState(false);
 
   const handleContact = (method: string) => {
     if (method === 'email') {
       window.location.href = 'mailto:lytran.31241021372@st.ueh.edu.vn';
-    } else {
-      console.log(`Contact via ${method} clicked`);
-      // todo: remove mock functionality - implement real contact methods
+      return;
     }
+    if (method === 'github') {
+      setShowCodeDialog(true);
+      return;
+    }
+    console.log(`Contact via ${method} clicked`);
+    // todo: remove mock functionality - implement real contact methods
   };
 
   const handleProjectView = (projectIndex: number) => {
@@ -30,6 +38,7 @@ export default function Contact() {
       tech: ["Computer Graphics", "Digital Art"],
       year: "2024",
       image: digidyeImage,
+      video: digiVideo,
       detailDescription: "A digital pixel-coloring software that allows users to import images, apply various mood filters, and color individual pixels or pixel clusters using different tools. It also supports tracking the number of colored pixels and downloading the final image at any time.",
       role: "Backend and frontend — responsible for processing pixelation algorithms and pixel-coloring data algorithms."
     },
@@ -39,10 +48,20 @@ export default function Contact() {
       tech: ["MediaPipe", "Interactive Art", "AI"],
       year: "2025",
       image: mediapipeImage,
+      video: mediapipeVideo,
       detailDescription: "An interactive interface that tracks hand movements. When the hand forms a bird-wing gesture, it activates the bird's flight path around the globe, illuminating the Earth and conveying a message of peace.",
       role: "Processing software — responsible for collaborative logic tracking and flight motion algorithms."
     }
   ];
+
+  const [showVideo, setShowVideo] = useState(false);
+
+  // Reset video state when switching projects or closing
+  useEffect(() => {
+    setShowVideo(false);
+  }, [selectedProject]);
+
+  // Code projects dialog moved to shared component
 
   return (
     <section id="contact" className="py-24 px-4 bg-muted/30">
@@ -229,11 +248,36 @@ export default function Contact() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                   {/* Left side - Image */}
                   <div className="space-y-4">
-                    <img 
-                      src={projects[selectedProject].image} 
-                      alt={projects[selectedProject].name}
-                      className="w-full h-64 object-cover rounded-lg"
-                    />
+                    {showVideo && projects[selectedProject].video ? (
+                      <video 
+                        key={projects[selectedProject].video}
+                        src={projects[selectedProject].video}
+                        className="w-full h-64 object-cover rounded-lg"
+                        controls
+                        preload="metadata"
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    ) : (
+                      <img 
+                        src={projects[selectedProject].image} 
+                        alt={projects[selectedProject].name}
+                        className="w-full h-64 object-cover rounded-lg"
+                      />
+                    )}
+                    <div>
+                      {projects[selectedProject].video && (
+                        <Button 
+                          variant={showVideo ? "secondary" : "outline"}
+                          size="sm"
+                          onClick={() => setShowVideo(v => !v)}
+                          data-testid="toggle-project-video"
+                          className="mb-2"
+                        >
+                          {showVideo ? "Hide Video" : "Play Demo Video"}
+                        </Button>
+                      )}
+                    </div>
                     <div className="flex flex-wrap gap-2">
                       {projects[selectedProject].tech.map((tech) => (
                         <Badge key={tech} variant="secondary" className="text-sm">
@@ -259,10 +303,13 @@ export default function Contact() {
                       </p>
                     </div>
 
-                    <div className="pt-4">
+                    <div className="pt-4 flex items-center gap-3">
                       <Badge variant="outline" className="text-sm">
                         {projects[selectedProject].year}
                       </Badge>
+                      {projects[selectedProject].video && !showVideo && (
+                        <span className="text-xs text-muted-foreground">Video available</span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -270,6 +317,9 @@ export default function Contact() {
             )}
           </DialogContent>
         </Dialog>
+
+        {/* Code Projects Selection Modal */}
+        <CodeProjectsDialog open={showCodeDialog} onOpenChange={setShowCodeDialog} />
       </div>
     </section>
   );

@@ -29,8 +29,8 @@ export default function SkillsProficiency() {
     {
       name: "Visual Studio Code",
       category: "Development",
-      proficiency: 75,
-      description: "Coding & Development",
+      proficiency: 25,
+      description: "Beginner – learning editor basics, extensions & workflows",
       icon: vsIcon
     },
     {

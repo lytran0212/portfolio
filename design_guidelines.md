@@ -44,7 +44,7 @@
 
 ## Content Strategy
 **Sections (5 total)**:
-1. **Hero**: Tagline "Art × Language × Technology" with artistic background
+1. **Hero**: Tagline "Art × Technology" with artistic background
 2. **Journey Timeline**: Visual timeline from 2022-2025 with key milestones
 3. **Skills & Proficiency**: Interactive progress bars for software expertise
 4. **Profile Hub**: Mindmap-style layout showcasing hobbies, goals, and skills

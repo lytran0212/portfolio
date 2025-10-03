@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Github, Mail } from "lucide-react";
 import heroImage from "@assets/generated_images/Japanese_artistic_hero_background_46deff62.png";
+import { useState } from "react";
+import { CodeProjectsDialog } from "./CodeProjectsDialog";
 
 export default function Hero() {
+  const [showCodeDialog, setShowCodeDialog] = useState(false);
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -31,8 +34,6 @@ export default function Hero() {
           
           <div className="text-2xl md:text-3xl font-light text-foreground mb-6">
             <span className="font-serif">Art</span>
-            <span className="mx-3 text-chart-2">×</span>
-            <span className="font-serif">Language</span>
             <span className="mx-3 text-chart-2">×</span>
             <span className="font-serif">Technology</span>
           </div>
@@ -63,7 +64,8 @@ export default function Hero() {
                 variant="outline"
                 className="hover-elevate bg-background/80 backdrop-blur-sm"
                 data-testid="button-github"
-                onClick={() => console.log('GitHub clicked')}
+                onClick={() => setShowCodeDialog(true)}
+                aria-label="View my code projects"
               >
                 <Github className="h-4 w-4" />
               </Button>
@@ -72,13 +74,15 @@ export default function Hero() {
                 variant="outline"
                 className="hover-elevate bg-background/80 backdrop-blur-sm"
                 data-testid="button-email"
-                onClick={() => console.log('Email clicked')}
+                onClick={() => { window.location.href = 'mailto:lytran.31241021372@st.ueh.edu.vn'; }}
+                aria-label="Send me an email"
               >
                 <Mail className="h-4 w-4" />
               </Button>
             </div>
           </div>
         </div>
+        <CodeProjectsDialog open={showCodeDialog} onOpenChange={setShowCodeDialog} />
       </div>
 
       {/* Scroll Indicator */}
