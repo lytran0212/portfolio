@@ -1,19 +1,26 @@
 import { useState, useEffect, useRef } from 'react';
 
-const galleryImages = [
-  '/attached_assets/DupliTone-Cover-Illustrator_1160x.jpg',
-  '/attached_assets/f2180d2ed5dade0b62f3dfa3346bd66f.jpg', 
-  '/attached_assets/images.png',
-  '/attached_assets/Black-Magic-Cover_1160x.png',
-  '/attached_assets/839ef3d59c9906ebc3fa4286b31ca9e2.jpg',
-  '/attached_assets/01_d44c1e02-e95d-4bdb-b1b7-cd8a2197e37c_1200x1200.png',
-  '/attached_assets/images (1).png'
-];
-
 export default function GalleryCarousel() {
   const [currentIdx, setCurrentIdx] = useState(0);
+  const [galleryImages, setGalleryImages] = useState<string[]>([]);
   const [startX, setStartX] = useState(0);
   const trackRef = useRef<HTMLDivElement>(null);
+
+  // Fetch images list from server
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/gallery-images');
+        if (!res.ok) throw new Error('Failed to load images');
+        const data: string[] = await res.json();
+        if (!cancelled) setGalleryImages(data);
+      } catch (e) {
+        console.error('Failed to fetch gallery images', e);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   const updateGallery = () => {
     if (trackRef.current) {
@@ -47,10 +54,12 @@ export default function GalleryCarousel() {
   }, [currentIdx]);
 
   const handlePrev = () => {
+    if (galleryImages.length === 0) return;
     setCurrentIdx((prevIdx) => (prevIdx - 1 + galleryImages.length) % galleryImages.length);
   };
 
   const handleNext = () => {
+    if (galleryImages.length === 0) return;
     setCurrentIdx((prevIdx) => (prevIdx + 1) % galleryImages.length);
   };
 
