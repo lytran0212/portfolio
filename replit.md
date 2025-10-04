@@ -34,14 +34,14 @@ Preferred communication style: Simple, everyday language.
 - Hero section with artistic background and interactive CTAs
 - Journey timeline with animated milestones (2022-2025)
 - Skills proficiency with animated progress bars
-- **Interactive Orbital Profile Hub System**:
-  - Central sun representing the user (Thao Ly)
-  - 4 planets orbiting at different speeds representing categories (Hobbies, Goals, Skills, Desires)
-  - Satellite dots orbiting each planet representing individual items
-  - Hover effects: animations pause and planets zoom on hover
-  - Click interactions: dialog opens with detailed information
-  - Parallax effect: orbital system responds to mouse movement
-  - Smooth CSS animations with customizable speeds and radii
+- **Interactive Constellation Profile Map**:
+  - Starry night sky background with twinkling stars
+  - 4 main stars representing categories (Hobbies, Goals, Skills, Desires)
+  - Click-to-discover interaction: reveals details for each category
+  - Progressive connection lines: stars connect as they are selected
+  - Constellation completion effect: special animation when all stars are discovered
+  - SVG-based line drawing animations with gradient effects
+  - Dialog system for detailed information display
 - Project showcase with video/image galleries
 - Gallery carousel with touch/swipe support
 - Code projects dialog for GitHub repository links
