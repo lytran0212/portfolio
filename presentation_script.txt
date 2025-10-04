@@ -1,0 +1,153 @@
+PORTFOLIO WEBSITE PRESENTATION SCRIPT
+=========================================
+
+Hello everyone! Today I'll walk you through my personal portfolio website, showing you each section as you would see it when visiting the site. Let me guide you from top to bottom and explain what each part does.
+
+1. THE HERO SECTION - FIRST IMPRESSION
+--------------------------------------
+When you first visit my website, you see a beautiful landing page with:
+
+- A large Japanese-inspired artistic background that sets the mood
+- My name "Thao Ly" displayed prominently in the center
+- The tagline "Art × Technology" which represents what I'm passionate about
+- A big blue button saying "Explore My Journey" that takes you down the page when clicked
+
+In the top right corner, there are two small icon buttons:
+- A GitHub icon: When you click it, a popup appears with my two main projects
+- An Email icon: Click this and it opens your email to send me a message
+
+This section is designed to make a strong first impression and give visitors quick access to my work or contact information.
+
+2. JOURNEY TIMELINE - MY STORY
+------------------------------
+As you scroll down, you'll see a timeline showing my journey from 2022 to 2025:
+
+- Each year has a marker showing what I accomplished
+- 2022: Started my studies in technology
+- 2023: Began learning programming and design
+- 2024: Created my first major projects (DigiDye)
+- 2025: Advanced projects with AI and interactive art (MediaPipe)
+
+When you hover over each year, it highlights and shows more details. This section tells visitors about my growth and learning path in a visual way.
+
+3. SKILLS & PROFICIENCY - WHAT I CAN DO
+---------------------------------------
+Next, you'll find progress bars showing my technical abilities:
+
+Programming Skills:
+- Python: 80% proficiency
+- JavaScript: 70% proficiency
+- HTML/CSS: 85% proficiency
+
+Design Tools:
+- Photoshop: 75% proficiency
+- Illustrator: 70% proficiency
+- Premiere Pro: 65% proficiency
+
+Development Tools:
+- Visual Studio Code: 25% proficiency (beginner level)
+
+Each bar animates when you scroll to this section, filling up to show my skill level. This gives visitors a quick understanding of what technologies I work with.
+
+4. PROFILE HUB - WHO I AM
+-------------------------
+This section uses a mindmap-style design showing:
+
+- My hobbies: Digital art, language learning, gaming
+- My goals: Working in the game industry, combining art with AI
+- My interests: Japanese culture, interactive media, creative coding
+
+Everything is arranged in a circular pattern with connecting lines, making it easy to see how my different interests connect to each other.
+
+5. CONTACT & PROJECTS - MY WORK SHOWCASE
+----------------------------------------
+The final main section has two parts:
+
+LEFT SIDE - Contact Information:
+- "Email Me" button: Opens your email program
+- "View My Code" button: Shows a popup to choose between my GitHub projects
+- "Send a Message" button: For other contact methods
+- A list of my areas of interest like Digital Art, AI Development, etc.
+
+RIGHT SIDE - Featured Projects:
+Two project cards are displayed:
+
+DigiDye Project Card:
+- Shows a screenshot of the pixel art software as background
+- Displays the project name and year (2024)
+- Lists technologies used: Computer Graphics, Digital Art
+- Has a "View Details" button
+
+MediaPipe Interactive Art Card:
+- Shows the hand-tracking interface as background
+- Year (2025) and technologies: MediaPipe, Interactive Art, AI
+- Also has a "View Details" button
+
+6. PROJECT DETAIL POPUPS - DEEPER DIVE
+--------------------------------------
+When you click "View Details" on any project, a large popup window appears showing:
+
+LEFT SIDE:
+- A larger image of the project
+- A "Play Demo Video" button (new feature!)
+- Technology badges showing what tools were used
+
+RIGHT SIDE:
+- Detailed description of what the project does
+- My specific role in creating it
+- The year it was completed
+
+For example, DigiDye popup explains:
+"A digital pixel-coloring software that allows users to import images, apply mood filters, and color individual pixels. I was responsible for backend and frontend development."
+
+7. VIDEO DEMONSTRATIONS - SEE IT IN ACTION
+------------------------------------------
+The most exciting new feature is the video demos:
+
+When you click "Play Demo Video" in a project popup:
+- The static image transforms into a video player
+- You can watch the actual software working
+- DigiDye video shows: Importing images, applying filters, coloring pixels
+- MediaPipe video shows: Hand tracking, bird animation, interactive elements
+
+The videos are compressed to load quickly but still show the full functionality of each project.
+
+8. CODE PROJECTS POPUP - GITHUB ACCESS
+--------------------------------------
+When you click the GitHub icon (top right) or "View My Code" button, a special popup appears:
+
+- Two project thumbnails side by side
+- DigiDye project with screenshot and description
+- MediaPipe project with screenshot and description
+- Click either one and it opens the GitHub repository in a new tab
+- The popup automatically closes after you make a selection
+
+This makes it easy for potential employers or collaborators to quickly access my source code.
+
+CONCLUSION - WHAT THIS SHOWS ABOUT ME
+-------------------------------------
+This website demonstrates that I can:
+- I want this website to show more details about my projects in the future, may be i'll add some feature to open directly each of my apps 
+- Build modern web applications using current technologies
+
+The site serves as both a showcase of my completed projects and a demonstration of my web development skills. Every section is designed to give visitors a clear understanding of who I am and what I can create.
+
+Thank you for taking this tour with me! I'm happy to answer any questions about the projects or how the website works.
+
+CONCLUSION
+----------
+This portfolio website demonstrates my ability to:
+- Combine artistic vision with technical implementation
+- Create user-friendly, interactive web experiences
+- Integrate multimedia content effectively
+- Follow modern web development best practices
+- Present complex information in an accessible format
+
+The site serves as both a showcase of my work and a demonstration of my technical capabilities, reflecting my unique position at the intersection of art and technology.
+
+Thank you for your attention. I'm happy to answer any questions about the technical implementation or design decisions.
+
+=========================================
+Total Presentation Time: Approximately 10-12 minutes
+Recommended for: Portfolio reviews, job interviews, academic presentations
+Note: This presentation follows the actual user journey through the website
