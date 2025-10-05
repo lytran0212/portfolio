@@ -122,6 +122,191 @@
   --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 }
 
+/* ==== 3D ROADMAP (Profile Hub replacement) ==== */
+.roadmap-3d {
+  position: relative;
+  height: 500px;
+  perspective: 1600px;
+  perspective-origin: 50% 30%;
+  --road-glow: 0 0% 100% / .25;
+  isolation: isolate;
+  /* subtle gradient background inside area */
+  background: linear-gradient(to bottom, hsl(var(--background) / 0.6), hsl(var(--background) / 0.2));
+  border: 1px solid hsl(var(--border));
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 4px 24px -6px hsl(var(--primary) / .15);
+}
+
+.dark .roadmap-3d { box-shadow: 0 6px 28px -4px hsl(var(--primary) / .25); }
+
+@media (min-width: 1024px) {
+  .roadmap-3d { height: 600px; }
+}
+
+.roadmap-3d-path {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: url(#glow) drop-shadow(0 0 4px hsl(var(--primary) / .6));
+  opacity: .8;
+  pointer-events: none;
+}
+
+.roadmap-node {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .35rem;
+  padding: .6rem .9rem .75rem;
+  background: hsl(var(--card) / .6);
+  backdrop-filter: blur(6px) saturate(140%);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
+  border: 1px solid hsl(var(--border));
+  border-radius: 1rem;
+  cursor: grab;
+  transition: transform .5s cubic-bezier(.22,1,.36,1), background-color .35s, border-color .35s, box-shadow .35s;
+  box-shadow: 0 4px 12px -4px hsl(var(--primary) / .25);
+  min-width: 150px;
+}
+
+.roadmap-node:active { cursor: grabbing; }
+
+.roadmap-node.is-active.dragging, .roadmap-node.dragging { box-shadow: 0 0 0 2px hsl(var(--primary) / .6), 0 0 0 6px hsl(var(--primary) / .25), 0 8px 24px -4px hsl(var(--primary) / .5); }
+
+.roadmap-node .icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px hsl(var(--background)), 0 0 0 5px hsl(var(--primary) / .25);
+  transition: box-shadow .4s, transform .4s;
+}
+
+.roadmap-node.is-active .icon-wrapper {
+  transform: scale(1.15);
+  box-shadow: 
+    0 0 0 3px hsl(var(--background)), 
+    0 0 0 6px hsl(var(--primary) / .6),
+    0 0 20px 8px hsl(var(--primary) / .4);
+}
+
+.roadmap-node .icon-wrapper svg {
+  width: 24px;
+  height: 24px;
+}
+
+.roadmap-node.is-active .icon-wrapper svg {
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.8));
+}
+
+.roadmap-node .title { font-size: .85rem; letter-spacing: .5px; text-align: center; }
+@media (min-width: 640px) { .roadmap-node .title { font-size: .95rem; } }
+
+.roadmap-node:is(:hover,:focus-visible) {
+  background: hsl(var(--card) / .9);
+  border-color: hsl(var(--primary) / .6);
+  box-shadow: 0 6px 18px -4px hsl(var(--primary) / .35), 0 0 0 1px hsl(var(--primary) / .4);
+}
+
+.roadmap-node:is(:hover,:focus-visible) .icon-wrapper { box-shadow: 0 0 0 3px hsl(var(--background)), 0 0 0 6px hsl(var(--primary) / .45); }
+
+.roadmap-node.is-active {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary) / .15),
+    hsl(var(--chart-2) / .15) 55%,
+    hsl(var(--chart-3) / .15)
+  );
+  border-color: hsl(var(--primary) / .75);
+  box-shadow: 0 8px 22px -6px hsl(var(--primary) / .45), 0 0 0 1px hsl(var(--primary) / .5);
+}
+
+.roadmap-node .ring-focus { position: absolute; inset: -4px; border-radius: 1.1rem; pointer-events: none; }
+
+.roadmap-node:focus-visible .ring-focus { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; }
+
+/* Depth subtle fade */
+.roadmap-node[data-depth="3"] { opacity: .55; }
+.roadmap-node[data-depth="2"] { opacity: .7; }
+.roadmap-node[data-depth="1"] { opacity: .85; }
+.roadmap-node[data-depth="0"] { opacity: 1; }
+
+/* Ribbon road specific refinements */
+.roadmap-3d-path .road-shape { stroke: none; }
+.roadmap-3d-path .road-lane { mix-blend-mode: screen; }
+
+.dark .roadmap-3d-path .road-lane { mix-blend-mode: lighten; }
+
+.node-base-shadow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 120%;
+  height: 55%;
+  transform: translate(-50%, -35%);
+  background: radial-gradient(ellipse at center, hsl(var(--foreground) / .35) 0%, hsl(var(--foreground) / 0) 65%);
+  opacity: .55;
+  filter: blur(4px);
+  transition: opacity .4s, transform .5s;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 50%;
+}
+
+.roadmap-node.is-active .node-base-shadow { opacity: .75; transform: translate(-50%, -35%) scale(1.05); }
+.roadmap-node:hover .node-base-shadow { opacity: .7; }
+
+/* Glowing ring animation for active node */
+.node-glow-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  border-radius: 1rem;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity .4s;
+}
+
+.roadmap-node.is-active .node-glow-ring {
+  opacity: 1;
+  box-shadow: 
+    0 0 20px 4px hsl(var(--primary) / .6),
+    0 0 40px 8px hsl(var(--primary) / .4),
+    0 0 60px 12px hsl(var(--primary) / .2);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px 4px hsl(var(--primary) / .6),
+      0 0 40px 8px hsl(var(--primary) / .4),
+      0 0 60px 12px hsl(var(--primary) / .2);
+  }
+  50% {
+    box-shadow: 
+      0 0 25px 6px hsl(var(--primary) / .7),
+      0 0 50px 10px hsl(var(--primary) / .5),
+      0 0 75px 15px hsl(var(--primary) / .3);
+  }
+}
+
+/* Depth scaling for shadow (using data-depth attribute) */
+.roadmap-node[data-depth="3"] .node-base-shadow { opacity: .25; filter: blur(2px); }
+.roadmap-node[data-depth="2"] .node-base-shadow { opacity: .35; filter: blur(2.5px); }
+.roadmap-node[data-depth="1"] .node-base-shadow { opacity: .5; filter: blur(3px); }
+.roadmap-node[data-depth="0"] .node-base-shadow { opacity: .65; filter: blur(4px); }
+
+
 .dark {
   --button-outline: rgba(255,255,255, .10);
   --badge-outline: rgba(255,255,255, .05);
@@ -252,9 +437,7 @@
   /* .no-default-hover-elevate/no-default-active-elevate is an escape hatch so consumers of
    * buttons/badges can remove the automatic brightness adjustment on interactions
    * and program their own. */
-  .no-default-hover-elevate {}
-
-  .no-default-active-elevate {}
+  /* Removed empty rulesets (.no-default-hover-elevate / .no-default-active-elevate) to satisfy linter */
 
 
   /**
