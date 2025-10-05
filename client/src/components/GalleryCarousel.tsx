@@ -1,19 +1,20 @@
 import { useState, useEffect, useRef } from 'react';
 
 const galleryImages = [
-  '/attached_assets/DupliTone-Cover-Illustrator_1160x.jpg',
-  '/attached_assets/f2180d2ed5dade0b62f3dfa3346bd66f.jpg', 
-  '/attached_assets/images.png',
-  '/attached_assets/Black-Magic-Cover_1160x.png',
-  '/attached_assets/839ef3d59c9906ebc3fa4286b31ca9e2.jpg',
-  '/attached_assets/01_d44c1e02-e95d-4bdb-b1b7-cd8a2197e37c_1200x1200.png',
-  '/attached_assets/images (1).png'
+  '/attached_assets/chii.jpg',
+  '/attached_assets/chii.jpg',
+  '/attached_assets/chii.jpg',
+  '/attached_assets/chii.jpg',
+  '/attached_assets/chii.jpg',
+  '/attached_assets/chii.jpg',
+  '/attached_assets/chii.jpg'
 ];
 
 export default function GalleryCarousel() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [startX, setStartX] = useState(0);
   const trackRef = useRef<HTMLDivElement>(null);
+  const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
 
   const updateGallery = () => {
     if (trackRef.current) {
@@ -46,6 +47,19 @@ export default function GalleryCarousel() {
     return () => clearTimeout(timer);
   }, [currentIdx]);
 
+  // Auto-play functionality
+  useEffect(() => {
+    autoPlayRef.current = setInterval(() => {
+      setCurrentIdx((prevIdx) => (prevIdx + 1) % galleryImages.length);
+    }, 1500); // Change image every 1.5 seconds (faster)
+
+    return () => {
+      if (autoPlayRef.current) {
+        clearInterval(autoPlayRef.current);
+      }
+    };
+  }, []);
+
   const handlePrev = () => {
     setCurrentIdx((prevIdx) => (prevIdx - 1 + galleryImages.length) % galleryImages.length);
   };
@@ -60,15 +74,19 @@ export default function GalleryCarousel() {
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     const dx = e.changedTouches[0].clientX - startX;
-    if (dx > 40) handlePrev();
-    if (dx < -40) handleNext();
+    if (dx > 40) {
+      handlePrev();
+    }
+    if (dx < -40) {
+      handleNext();
+    }
   };
 
   const getImageClass = (idx: number) => {
-    let baseClass = "w-[260px] h-[180px] object-cover rounded-2xl shadow-lg transition-all duration-700 ease-out relative flex-shrink-0 ";
+    let baseClass = "w-[260px] h-[180px] object-cover rounded-2xl transition-all duration-700 ease-out relative flex-shrink-0 ";
     
     if (idx === currentIdx) {
-      return baseClass + "opacity-100 z-10 shadow-2xl filter-none";
+      return baseClass + "opacity-100 z-10 filter-none";
     } else if (idx === (currentIdx - 1 + galleryImages.length) % galleryImages.length) {
       return baseClass + "opacity-85 z-[6] filter grayscale brightness-85 blur-[0.5px] -mr-[30px]";
     } else if (idx === (currentIdx + 1) % galleryImages.length) {
@@ -107,11 +125,6 @@ export default function GalleryCarousel() {
                 src={src}
                 className={`${getImageClass(idx)} max-md:w-[120px] max-md:h-[80px]`}
                 alt={`Gallery ${idx + 1}`}
-                style={{
-                  boxShadow: idx === currentIdx 
-                    ? '0 8px 32px rgba(243, 89, 100, 0.3), 0 2px 8px rgba(230, 211, 179, 0.3)'
-                    : '0 4px 24px rgba(34, 34, 40, 0.5)'
-                }}
               />
             ))}
           </div>
