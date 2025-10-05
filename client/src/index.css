@@ -160,16 +160,13 @@
   flex-direction: column;
   align-items: center;
   gap: .35rem;
-  padding: .6rem .9rem .75rem;
-  background: hsl(var(--card) / .6);
-  backdrop-filter: blur(6px) saturate(140%);
-  -webkit-backdrop-filter: blur(6px) saturate(140%);
-  border: 1px solid hsl(var(--border));
-  border-radius: 1rem;
+  padding: .25rem .4rem .35rem; /* slimmer hit area after removing card */
+  background: transparent;
+  border: none;
   cursor: grab;
-  transition: transform .5s cubic-bezier(.22,1,.36,1), background-color .35s, border-color .35s, box-shadow .35s;
-  box-shadow: 0 4px 12px -4px hsl(var(--primary) / .25);
-  min-width: 150px;
+  transition: transform .5s cubic-bezier(.22,1,.36,1), filter .35s;
+  box-shadow: none;
+  min-width: 0;
 }
 
 .roadmap-node:active { cursor: grabbing; }
@@ -204,27 +201,71 @@
   filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.8));
 }
 
+/* ===== Spirit Avatar ===== */
+.spirit-avatar {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  width: 5.5rem;
+  height: 5.5rem;
+  z-index: 60;
+  filter: drop-shadow(0 0 6px hsl(var(--chart-2) / .7)) drop-shadow(0 0 18px hsl(var(--primary) / .4));
+  transition: left .4s linear, top .4s linear, transform .45s ease-in-out;
+  /* Allow customization of body horizontal squash */
+  --spirit-body-scale-x: .72; /* smaller => dẹt ngang hơn */
+}
+
+.spirit-core { position: relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+.spirit-head {
+  position:absolute;
+  top:10%; left:50%; transform:translateX(-50%);
+  width:40%; height:40%;
+  background:radial-gradient(circle at 30% 30%, hsl(var(--primary) / .9), hsl(var(--primary) / .4) 70%, transparent 100%);
+  border-radius:50%;
+  animation: spiritGlow 3s ease-in-out infinite;
+}
+.spirit-body { position:absolute; bottom:12%; left:50%; transform:translateX(-50%); width:46%; height:42%; }
+/* Flatten (squash) horizontally with scaleX variable */
+.spirit-body::before { content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 20%, hsl(var(--primary) / .8), hsl(var(--primary) / .35) 60%, transparent 100%); border-radius:48% 48% 55% 55% / 60% 60% 45% 45%; transform: scaleX(var(--spirit-body-scale-x)); transform-origin:center; }
+.spirit-body .arm, .spirit-body .leg { position:absolute; background: hsl(var(--primary) / .65); border-radius: 999px; }
+/* Arms closer to body */
+.spirit-body .arm { width:14%; height:32%; top:28%; }
+.spirit-body .arm.left { left:-2%; transform-origin: top center; }
+.spirit-body .arm.right { right:-2%; transform-origin: top center; }
+/* Legs moved slightly downward */
+.spirit-body .leg { width:16%; height:40%; bottom:-8%; }
+.spirit-body .leg.left { left:20%; transform-origin: top center; }
+.spirit-body .leg.right { right:20%; transform-origin: top center; }
+
+/* Idle subtle breathing */
+.spirit-idle .spirit-head, .spirit-idle .spirit-body::before { animation: spiritGlow 4s ease-in-out infinite; }
+
+/* Walking animation (alternate leg + arm swing) */
+.spirit-walking .arm.left { animation: armSwing 0.6s linear infinite alternate; }
+.spirit-walking .arm.right { animation: armSwing 0.6s linear infinite alternate-reverse; }
+.spirit-walking .leg.left { animation: legStep 0.6s ease-in-out infinite alternate; }
+.spirit-walking .leg.right { animation: legStep 0.6s ease-in-out infinite alternate-reverse; }
+
+/* Celebrate: raise both arms + little jump */
+.spirit-celebrate .arm.left { animation: raiseArm 1.2s ease-in-out forwards; }
+.spirit-celebrate .arm.right { animation: raiseArm 1.2s ease-in-out forwards; }
+.spirit-celebrate .spirit-core { animation: spiritJump 1.2s ease-out forwards; }
+
+@keyframes spiritGlow { 0%,100% { filter: brightness(1) blur(0.5px); } 50% { filter: brightness(1.35) blur(1.5px); } }
+@keyframes armSwing { from { transform: rotate(18deg); } to { transform: rotate(-26deg); } }
+@keyframes legStep { from { transform: rotate(8deg) translateY(0); } to { transform: rotate(-14deg) translateY(4%); } }
+@keyframes raiseArm { 0% { transform: rotate(0deg) translateY(0); } 35% { transform: rotate(-160deg) translateY(-10%); } 70% { transform: rotate(-140deg) translateY(-8%); } 100% { transform: rotate(-150deg) translateY(-8%); } }
+@keyframes spiritJump { 0% { transform: translateY(0); } 35% { transform: translateY(-14%); } 70% { transform: translateY(-10%); } 100% { transform: translateY(0); } }
+
+
 .roadmap-node .title { font-size: .85rem; letter-spacing: .5px; text-align: center; }
 @media (min-width: 640px) { .roadmap-node .title { font-size: .95rem; } }
 
-.roadmap-node:is(:hover,:focus-visible) {
-  background: hsl(var(--card) / .9);
-  border-color: hsl(var(--primary) / .6);
-  box-shadow: 0 6px 18px -4px hsl(var(--primary) / .35), 0 0 0 1px hsl(var(--primary) / .4);
-}
+/* Hover/focus now only enhances the circular icon */
+.roadmap-node:is(:hover,:focus-visible) .icon-wrapper { box-shadow: 0 0 0 3px hsl(var(--background)), 0 0 0 6px hsl(var(--primary) / .55), 0 0 16px 4px hsl(var(--primary) / .35); }
 
-.roadmap-node:is(:hover,:focus-visible) .icon-wrapper { box-shadow: 0 0 0 3px hsl(var(--background)), 0 0 0 6px hsl(var(--primary) / .45); }
-
-.roadmap-node.is-active {
-  background: linear-gradient(
-    135deg,
-    hsl(var(--primary) / .15),
-    hsl(var(--chart-2) / .15) 55%,
-    hsl(var(--chart-3) / .15)
-  );
-  border-color: hsl(var(--primary) / .75);
-  box-shadow: 0 8px 22px -6px hsl(var(--primary) / .45), 0 0 0 1px hsl(var(--primary) / .5);
-}
+/* Active state no longer shows rectangular card – icon glow handles emphasis */
+.roadmap-node.is-active { filter: brightness(1.05); }
 
 .roadmap-node .ring-focus { position: absolute; inset: -4px; border-radius: 1.1rem; pointer-events: none; }
 
@@ -242,23 +283,10 @@
 
 .dark .roadmap-3d-path .road-lane { mix-blend-mode: lighten; }
 
-.node-base-shadow {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 120%;
-  height: 55%;
-  transform: translate(-50%, -35%);
-  background: radial-gradient(ellipse at center, hsl(var(--foreground) / .35) 0%, hsl(var(--foreground) / 0) 65%);
-  opacity: .55;
-  filter: blur(4px);
-  transition: opacity .4s, transform .5s;
-  pointer-events: none;
-  z-index: -1;
-  border-radius: 50%;
-}
+/* Adjust shadow to sit only under the circular icon (removes suggestion of a rectangle) */
+.node-base-shadow { position:absolute; left:50%; top:42%; width:70%; height:38%; transform:translate(-50%, -35%); background:radial-gradient(circle at 50% 50%, hsl(var(--primary) / .45), transparent 70%); opacity:.5; filter:blur(6px); transition:opacity .4s, transform .5s; pointer-events:none; z-index:-1; border-radius:50%; }
 
-.roadmap-node.is-active .node-base-shadow { opacity: .75; transform: translate(-50%, -35%) scale(1.05); }
+.roadmap-node.is-active .node-base-shadow { opacity: .75; transform: translate(-50%, -35%) scale(1.15); }
 .roadmap-node:hover .node-base-shadow { opacity: .7; }
 
 /* Glowing ring animation for active node */

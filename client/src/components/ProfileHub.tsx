@@ -26,10 +26,10 @@ export default function ProfileHub() {
       title: "Hobbies & Passion",
       icon: <Heart className="h-5 w-5" />,
       points: [
-        "Watching anime & Japanese culture",
         "Watching gameplay / livestreams",
-        "Digital Art & Painting",
         "Graphic design & editing",
+        "Watching anime & Japanese culture",
+        "Digital Art & Painting",
         "Exploring new AI / web tech"
       ],
       colorClass: "bg-chart-2",
@@ -90,6 +90,22 @@ export default function ProfileHub() {
   const [nodes, setNodes] = useState<RoadmapNode[]>(() => initialNodes);
   const [activeId, setActiveId] = useState(initialNodes[0].id);
   const activeNode = nodes.find(n => n.id === activeId)!;
+  // Spirit avatar position / animation state
+  const [spiritPos, setSpiritPos] = useState<{x:number;y:number}>({ x: activeNode.position.x, y: activeNode.position.y });
+  const [spiritMode, setSpiritMode] = useState<'idle'|'walking'|'celebrate'>('idle');
+
+  // Precompute min/max Y for perspective scaling of spirit avatar
+  const minY = React.useMemo(() => Math.min(...nodes.map(n => n.position.y)), [nodes]);
+  const maxY = React.useMemo(() => Math.max(...nodes.map(n => n.position.y)), [nodes]);
+  const avatarScale = React.useMemo(() => {
+    const range = maxY - minY || 1;
+    const tRaw = (spiritPos.y - minY) / range; // 0 (far) -> 1 (near)
+    // Smoothstep easing for nicer interpolation
+    const t = Math.min(1, Math.max(0, tRaw));
+    const eased = t * t * (3 - 2 * t);
+    // Scale range: far 0.38 -> near 1.02 (adjustable constants)
+    return 0.38 + eased * (1.02 - 0.38);
+  }, [spiritPos.y, minY, maxY]);
 
   // ===== Geometry helpers for smooth tapered road =====
   type Pt = { x: number; y: number }
@@ -218,6 +234,45 @@ export default function ProfileHub() {
     });
   };
 
+  // Animate spirit when activeId changes
+  useEffect(() => {
+    const target = nodes.find(n => n.id === activeId);
+    if (!target) return;
+    // distance in percentage space
+    const dx = target.position.x - spiritPos.x;
+    const dy = target.position.y - spiritPos.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist < 0.5) {
+      setSpiritPos({ x: target.position.x, y: target.position.y });
+      setSpiritMode('celebrate');
+      const celebrateTimer = setTimeout(() => setSpiritMode('idle'), 1200);
+      return () => clearTimeout(celebrateTimer);
+    }
+    const speed = 35; // % units per second (tunable)
+    const duration = (dist / speed) * 1000;
+    setSpiritMode('walking');
+    let start: number | null = null;
+    const startX = spiritPos.x;
+    const startY = spiritPos.y;
+    const animate = (ts: number) => {
+      if (start === null) start = ts;
+      const t = Math.min(1, (ts - start) / duration);
+      // ease in-out
+      const ease = t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t;
+      setSpiritPos({ x: startX + dx * ease, y: startY + dy * ease });
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setSpiritMode('celebrate');
+        setSpiritPos({ x: target.position.x, y: target.position.y });
+        setTimeout(() => setSpiritMode('idle'), 1400);
+      }
+    };
+    const raf = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(raf);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeId]);
+
   useEffect(() => {
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
@@ -345,6 +400,26 @@ export default function ProfileHub() {
               </button>
             );
           })}
+          {/* Spirit Avatar */}
+          <div
+            className={`spirit-avatar spirit-${spiritMode}`}
+            style={{
+              left: `${spiritPos.x}%`,
+              top: `${spiritPos.y}%`,
+              transform: `translate(-50%, -50%) scale(${avatarScale.toFixed(3)})`
+            }}
+            aria-hidden="true"
+          >
+            <div className="spirit-core">
+              <div className="spirit-head" />
+              <div className="spirit-body">
+                <div className="arm left" />
+                <div className="arm right" />
+                <div className="leg left" />
+                <div className="leg right" />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Right: Active Node Detail */}
